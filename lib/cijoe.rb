@@ -14,12 +14,13 @@
 # Seriously, I'm gonna be nuts about keeping this simple.
 
 require 'open4'
+require 'bitly'
 require 'cijoe/version'
 require 'cijoe/config'
 require 'cijoe/commit'
 require 'cijoe/build'
-require 'cijoe/campfire'
 require 'cijoe/server'
+require 'cijoe/notifier'
 
 class CIJoe
   attr_reader :user, :project, :url, :current_build, :last_build
@@ -70,7 +71,7 @@ class CIJoe
     @current_build.output = output
     @last_build = @current_build
     @current_build = nil
-    @last_build.notify if @last_build.respond_to? :notify
+    @last_build.send_notifications if @last_build.respond_to? :send_notifications
   end
 
   # run the build but make sure only

@@ -45,7 +45,7 @@ class CIJoe
 
       setup_auth
 
-      CIJoe::Campfire.activate
+      CIJoe::Notifier::Base.activate
       CIJoe::Server.run! :host => host, :port => port
     end
 
