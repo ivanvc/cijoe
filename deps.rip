@@ -6,3 +6,5 @@ git://github.com/ahoward/open4.git 25c3ed8
 git://github.com/jnunemaker/twitter.git v0.6.14
 git://github.com/philnash/bitly.git fb8ce67
 git://github.com/jnunemaker/crack.git v0.1.4
+git://github.com/pelle/oauth.git v0.3.0
+git://github.com/jnunemaker/httparty.git b0cf1e9
