@@ -1,21 +1,14 @@
 class CIJoe
-  class Commit < Struct.new(:sha, :user, :project)
-    def self.bitly
-      @@bitly ||= Bitly.new
-    end
-        
+  class Commit < Struct.new(:sha, :user, :project)        
     def url
       "http://github.com/#{user}/#{project}/commit/#{sha}"
     end
     
     def tiny_url
-      begin
-        @tiny_url ||= begin 
-          bitly_url = self.class.bitly.shorten(url)
-          bitly_url.short_url
+      @tiny_url ||= begin 
+        Net::HTTP.start('is.gd', 80) do |http|
+            http.get("/api.php?longurl=#{url}").body
         end
-      rescue 
-        url
       end
     end
 

@@ -14,7 +14,8 @@
 # Seriously, I'm gonna be nuts about keeping this simple.
 
 require 'open4'
-require 'bitly'
+require 'net/http'
+require 'uri'
 require 'cijoe/version'
 require 'cijoe/config'
 require 'cijoe/commit'
