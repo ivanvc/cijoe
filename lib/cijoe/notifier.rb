@@ -6,9 +6,11 @@ class CIJoe
         CIJoe::Build.class_eval do
           include CIJoe::Notifier::Base
         end
-        Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/notifiers/*.rb").each do |file|
-          require file
-          notifiers << eval("CIJoe::Notifier::#{File.basename(file,'.rb').gsub(/(\A|_)(\w)/) { |w| w.tr('_','').upcase }}.activate")
+        ["~/.cijoe_notifiers/*.rb", "#{ File.dirname(__FILE__) }/notifiers/*.rb"].each do |dir|
+          Dir.glob(File.expand_path(dir)).each do |file|
+            require file
+            notifiers << eval("CIJoe::Notifier::#{ File.basename(file,'.rb').gsub(/(\A|_)(\w)/) { |w| w.tr('_','').upcase } }.activate")
+          end          
         end
       end
       
@@ -17,7 +19,7 @@ class CIJoe
       end
       
       def send_notifications
-        CIJoe::Notifier::Base.notifiers.compact.each { |w| w.notify(self) }
+        CIJoe::Notifier::Base.notifiers.compact.each { |n| n.notify(self) }
       end
       
     end
