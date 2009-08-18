@@ -3,7 +3,6 @@ class CIJoe
     class TwitterNotifier
       def self.activate
         if valid_config?
-          require 'twitter'
           puts "Loaded Twitter notifier"
           new
         else
@@ -28,20 +27,17 @@ class CIJoe
       end
 
       def notify(build)
-        self.class.twitter.update "#{short_message(build)}. #{build.commit.tiny_url}"
+        Net::HTTP.post_form(self.class.base_uri, { 'status' => short_message(build) })
       end
 
     private
-      def self.twitter
-        @twitter ||= begin
-          config = TwitterNotifier.config
-          httpauth = Twitter::HTTPAuth.new(config[:user], config[:pass])
-          base = Twitter::Base.new(httpauth)
-        end
+    
+      def self.base_uri
+        @@base_uri ||= URI.parse( "http://#{config[:user]}:#{config[:pass]}@twitter.com/statuses/update.json" )
       end
 
       def short_message(build)
-        "Build #{build.short_sha} of #{build.project} #{build.worked? ? "was successful" : "failed"} (#{build.commit.short_author})"
+        "[#{build.project}] build #{build.short_sha} by #{build.commit.short_author} #{build.worked? ? "was successful" : "failed"}. #{build.commit.tiny_url}"
       end
     end
   end
